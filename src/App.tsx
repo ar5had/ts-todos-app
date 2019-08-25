@@ -1,5 +1,5 @@
 import React, { useState, FormEvent, ChangeEvent } from 'react';
-// import shortid from 'shortid';
+import * as shortid from 'shortid';
 import './App.css';
 
 type TodoItem = string;
@@ -13,7 +13,7 @@ interface AddTodoProps {
 }
 
 const Todos: React.FC<TodosProps> = ({ value }) => {
-  const todos = value.map(todo => <li key={todo}>{todo}</li>)
+  const todos = value.map(todo => <li key={shortid.generate()}>{todo}</li>)
   return (
     <ul>
       {todos}
