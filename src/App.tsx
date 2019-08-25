@@ -1,26 +1,56 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useState, FormEvent } from 'react';
+// import shortid from 'shortid';
 import './App.css';
 
-const App: React.FC = () => {
+interface TodosProps {
+   value: string[]
+}
+
+interface AddTodoProps {
+  addTodo: (todo: string) => void
+}
+
+const Todos : React.FC<TodosProps>= ({ value }) => {
+  const todos = value.map(todo => <li key={todo}>{todo}</li>)
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <ul>
+      {todos}
+    </ul>
+  );
+};
+
+const AddTodo : React.FC<AddTodoProps> = ({ addTodo }) => {
+  const [value, setValue] = useState('');
+  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    addTodo(e.target.todo.value);
+    setValue('');
+  };
+
+  return (
+    <form onSubmit={onSubmit}>
+      <input
+        type="text"
+        value={value}
+        name="todo"
+        onChange={({ target: { value } }) => setValue(value)}
+      />
+      <input type="submit" />
+    </form>
+  );
+};
+
+const App : React.FC = () => {
+  const [todos, setTodos] = useState<string[]>([]);
+  const addTodo = (todo: string) => setTodos([todo, ...todos]);
+
+  return (
+    <div className="wrapper">
+      <h4>Todos</h4>
+      <AddTodo addTodo={addTodo} />
+      <Todos value={todos} />
     </div>
   );
-}
+};
 
 export default App;
