@@ -1,16 +1,18 @@
-import React, { useState, FormEvent } from 'react';
+import React, { useState, FormEvent, ChangeEvent } from 'react';
 // import shortid from 'shortid';
 import './App.css';
 
+type TodoItem = string;
+
 interface TodosProps {
-   value: string[]
+  value: TodoItem[]
 }
 
 interface AddTodoProps {
-  addTodo: (todo: string) => void
+  addTodo: (todo: TodoItem) => void
 }
 
-const Todos : React.FC<TodosProps>= ({ value }) => {
+const Todos: React.FC<TodosProps> = ({ value }) => {
   const todos = value.map(todo => <li key={todo}>{todo}</li>)
   return (
     <ul>
@@ -19,13 +21,16 @@ const Todos : React.FC<TodosProps>= ({ value }) => {
   );
 };
 
-const AddTodo : React.FC<AddTodoProps> = ({ addTodo }) => {
+const AddTodo: React.FC<AddTodoProps> = ({ addTodo }) => {
   const [value, setValue] = useState('');
+
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    addTodo(e.target.todo.value);
+    addTodo(e.currentTarget.todo.value);
     setValue('');
   };
+
+  const onChange = (e: ChangeEvent<HTMLInputElement>) => setValue(e.currentTarget.value);
 
   return (
     <form onSubmit={onSubmit}>
@@ -33,15 +38,15 @@ const AddTodo : React.FC<AddTodoProps> = ({ addTodo }) => {
         type="text"
         value={value}
         name="todo"
-        onChange={({ target: { value } }) => setValue(value)}
+        onChange={onChange}
       />
       <input type="submit" />
     </form>
   );
 };
 
-const App : React.FC = () => {
-  const [todos, setTodos] = useState<string[]>([]);
+const App: React.FC = () => {
+  const [todos, setTodos] = useState<TodoItem[]>([]);
   const addTodo = (todo: string) => setTodos([todo, ...todos]);
 
   return (
